@@ -42,6 +42,7 @@ func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, i
 				global.Logger.Errorf("Failed to prepare request with error: %v", err)
 				return
 			}
+			req.Header.Set("Content-Type", "application/json")
 			// Do request
 			_, err = (&http.Client{}).Do(req)
 			if err != nil {
