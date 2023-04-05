@@ -9,16 +9,19 @@ import (
 	"net/http"
 )
 
-func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, isNative bool, contractMeta *types.ContractMeta, amount float64, tx string) {
+func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, isNative bool, contractAddress string, contractMeta *types.ContractMeta, amount float64, tx string) {
 	global.Logger.Debugf("Sending response to webhooks...")
 
 	// Prepare request body
 	body := types.WebhookCallbackBody{
-		ChainID:     chain.ID,
-		Sender:      sender,
-		Receiver:    receiver,
-		IsNative:    isNative,
-		Contract:    contractMeta,
+		ChainID:  chain.ID,
+		Sender:   sender,
+		Receiver: receiver,
+		IsNative: isNative,
+		Contract: &types.ContractAddressWithMeta{
+			Address:      contractAddress,
+			ContractMeta: *contractMeta,
+		},
 		Amount:      amount,
 		Transaction: tx,
 	}
