@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app:
+    restart: always
+    #build: .
+    image: ncr.pub/nyawork/dpay/eth-watcher:latest
+    networks:
+      - internal_network
+      - external_network
+    volumes:
+      - "./config.yml:/app/config.yml:ro"
+
+  redis:
+    restart: always
+    image: redis:alpine
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - internal_network
+    volumes:
+      - ./redis:/data
+
+networks:
+  internal_network:
+    internal: true
+  external_network:

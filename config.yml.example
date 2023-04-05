@@ -1,0 +1,12 @@
+system:
+  redis: "redis://localhost:6379/0"
+  production: false
+receiver:
+  - "0x332De1aFBCf704E4005A803158c1d58696005BC2"
+chain:
+  - id: 11155111
+    rpc: "https://rpc.sepolia.org"
+    interval: 10 # Seconds
+    includeNative: true
+webhooks:
+  - ""
