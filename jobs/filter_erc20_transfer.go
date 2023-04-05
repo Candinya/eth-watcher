@@ -22,18 +22,13 @@ func init() {
 
 func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uint64) (filteredLogs []types.FilterParsedLog, err error) {
 
-	var receiversHash []ethCommon.Hash
-	for _, receiver := range config.Status.Receivers {
-		receiversHash = append(receiversHash, receiver.Hash())
-	}
-
 	query := ethereum.FilterQuery{
 		FromBlock: big.NewInt(int64(fromBlock)),
 		ToBlock:   big.NewInt(int64(toBlock)),
 		Topics: [][]ethCommon.Hash{
 			{erc20TransferTopic0Hash},
-			{},            // From any
-			receiversHash, // To receivers
+			{},                          // From any
+			config.Status.ReceiversHash, // To receivers
 		},
 	}
 

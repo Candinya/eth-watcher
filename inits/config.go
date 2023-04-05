@@ -35,8 +35,10 @@ func Config() error {
 	}
 
 	// Update status
-	for _, receiverAddress := range config.Config.Receiver {
-		config.Status.Receivers = append(config.Status.Receivers, ethCommon.HexToAddress(receiverAddress))
+	for _, receiverAddressHex := range config.Config.Receiver {
+		receiverAddress := ethCommon.HexToAddress(receiverAddressHex)
+		config.Status.Receivers = append(config.Status.Receivers, receiverAddress)
+		config.Status.ReceiversHash = append(config.Status.ReceiversHash, receiverAddress.Hash())
 	}
 
 	return nil

@@ -15,9 +15,9 @@ func TestFilterERC20Transfer(t *testing.T) {
 	defer logger.Sync() // Unable to handle errors here
 	global.Logger = logger.Sugar()
 
-	config.Status.Receivers = []ethCommon.Address{
-		ethCommon.HexToAddress("0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA"),
-		ethCommon.HexToAddress("0x9C8a0A9B5d5b178D73e775a2dC4D52711758C388"),
+	config.Status.ReceiversHash = []ethCommon.Hash{
+		ethCommon.HexToHash("0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA"),
+		ethCommon.HexToHash("0x9C8a0A9B5d5b178D73e775a2dC4D52711758C388"),
 	}
 
 	client, err := ethclient.Dial("https://rpc.sepolia.org")
