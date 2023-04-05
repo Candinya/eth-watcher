@@ -8,10 +8,10 @@ import (
 
 func Jobs() error {
 	// Start watching chains
-	for _, chain := range config.Config.Chain {
-		err := jobs.WatchBlockChain(&chain)
+	for index := range config.Config.Chain {
+		err := jobs.WatchBlockChain(&config.Config.Chain[index])
 		if err != nil {
-			global.Logger.Errorf("Failed to start watching chain #%d with error: %v", chain.ID, err)
+			global.Logger.Errorf("Failed to start watching chain #%d with error: %v", config.Config.Chain[index].ID, err)
 		}
 	}
 
