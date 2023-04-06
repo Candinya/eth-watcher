@@ -1,12 +1,12 @@
 system:
-  redis: "redis://localhost:6379/0"
-  production: false
-receiver:
+  redis: "redis://redis:6379/0" # Link to redis database. No need to change this when using provided docker compose file.
+  production: true # Run in production mode.
+receiver: # Receiver address, you can add multiple ethereum addresses.
   - "0x332De1aFBCf704E4005A803158c1d58696005BC2"
-chain:
-  - id: 11155111
-    rpc: "https://rpc.sepolia.org"
-    interval: 10 # Seconds
-    includeNative: true
-webhooks:
+chain: # Watching chain. You can add multiple EVM compatible chains.
+  - id: 11155111 # Chain's ID, see https://chainlist.org .
+    rpc: "https://rpc.sepolia.org" # JSON RPC endpoint of target chain.
+    interval: 10 # Query interval, this should be a little larger than the common block interval of this chain. Seconds.
+    includeNative: true # Watch native token transfer events. You can disable this if you only want to watch ERC20 token transfer events.
+webhooks: # Target webhook URL, you can add multiple webhooks here.
   - ""
