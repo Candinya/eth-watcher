@@ -15,7 +15,7 @@ func TestFilterERC20Transfer(t *testing.T) {
 	defer logger.Sync() // Unable to handle errors here
 	global.Logger = logger.Sugar()
 
-	config.Status.ReceiversHash = []ethCommon.Hash{
+	config.Config.ReceiversHash = []ethCommon.Hash{
 		ethCommon.HexToHash("0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA"),
 		ethCommon.HexToHash("0x9C8a0A9B5d5b178D73e775a2dC4D52711758C388"),
 	}
@@ -27,7 +27,7 @@ func TestFilterERC20Transfer(t *testing.T) {
 	}
 
 	// Looking for 0x9bbfcecd22e6ac1a1bbd8fa08f0f80fd12edc3ac05886da243340a26bc298f8f
-	logs, err := filterERC20Transfer(client, 3229370, 3229467)
+	logs, err := filterERC20Transfer(client, 3229370, 3229467, nil)
 	if err != nil {
 		t.Fatalf("Failed to filter native transfer with error: %v", err)
 		return

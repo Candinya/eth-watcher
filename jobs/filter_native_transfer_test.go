@@ -15,8 +15,8 @@ func TestFilterNativeTransfer(t *testing.T) {
 	defer logger.Sync() // Unable to handle errors here
 	global.Logger = logger.Sugar()
 
-	config.Status.Receivers = []ethCommon.Address{
-		ethCommon.HexToAddress("0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA"),
+	config.Config.ReceiversHash = []ethCommon.Hash{
+		ethCommon.HexToHash("0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA"),
 	}
 
 	client, err := ethclient.Dial("https://rpc.sepolia.org")

@@ -20,15 +20,16 @@ func init() {
 	erc20TransferTopic0Hash = ethCommon.HexToHash(consts.ERC20_TRANSFER_TOPIC_0_HEX)
 }
 
-func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uint64) (filteredLogs []types.FilterParsedLog, err error) {
+func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uint64, contractWhitelist []ethCommon.Address) (filteredLogs []types.FilterParsedLog, err error) {
 
 	query := ethereum.FilterQuery{
 		FromBlock: big.NewInt(int64(fromBlock)),
 		ToBlock:   big.NewInt(int64(toBlock)),
+		Addresses: contractWhitelist,
 		Topics: [][]ethCommon.Hash{
 			{erc20TransferTopic0Hash},
 			{},                          // From any
-			config.Status.ReceiversHash, // To receivers
+			config.Config.ReceiversHash, // To receivers
 		},
 	}
 

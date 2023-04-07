@@ -34,11 +34,16 @@ func Config() error {
 		}
 	}
 
-	// Update status
-	for _, receiverAddressHex := range config.Config.Receiver {
-		receiverAddress := ethCommon.HexToAddress(receiverAddressHex)
-		config.Status.Receivers = append(config.Status.Receivers, receiverAddress)
-		config.Status.ReceiversHash = append(config.Status.ReceiversHash, receiverAddress.Hash())
+	// Set receivers
+	for _, receiverAddressHex := range config.Config.ReceiversCfg {
+		config.Config.ReceiversHash = append(config.Config.ReceiversHash, ethCommon.HexToHash(receiverAddressHex))
+	}
+
+	// Set chain whitelists
+	for index := range config.Config.Chain {
+		for _, contractAddressHex := range config.Config.Chain[index].ContractWhitelistCfg {
+			config.Config.Chain[index].ContractWhitelistAddress = append(config.Config.Chain[index].ContractWhitelistAddress, ethCommon.HexToAddress(contractAddressHex))
+		}
 	}
 
 	return nil

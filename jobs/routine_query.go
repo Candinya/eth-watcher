@@ -55,7 +55,7 @@ func routineQuery(chain *types.ChainConfig, client *ethclient.Client) {
 	}
 
 	// Filter ERC20 transfer events
-	erc20Logs, err := filterERC20Transfer(client, lastHeight, currentHeight-1)
+	erc20Logs, err := filterERC20Transfer(client, lastHeight, currentHeight-1, chain.ContractWhitelistAddress)
 	if err != nil {
 		global.Logger.Errorf("Failed to filter ERC20 transfer logs with error: %v", err)
 	}

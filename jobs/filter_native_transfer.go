@@ -36,8 +36,8 @@ func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock ui
 				continue
 			}
 			// Check if transaction recipient is in receivers
-			for _, receiver := range config.Status.Receivers {
-				if bytes.Equal(tx.To().Bytes(), receiver.Bytes()) {
+			for _, receiver := range config.Config.ReceiversHash {
+				if bytes.Equal(tx.To().Hash().Bytes(), receiver.Bytes()) {
 					// Found
 					sender, err := ethTypes.Sender(ethTypes.LatestSignerForChainID(tx.ChainId()), tx)
 					if err != nil {
@@ -47,7 +47,7 @@ func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock ui
 
 					filteredLogs = append(filteredLogs, types.FilterParsedLog{
 						Sender:   sender,
-						Receiver: receiver,
+						Receiver: *tx.To(),
 						Amount:   tx.Value(),
 						Contract: nil,
 						TxHash:   tx.Hash(),

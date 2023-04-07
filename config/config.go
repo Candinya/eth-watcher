@@ -1,15 +1,20 @@
 package config
 
-import "eth-watcher/types"
+import (
+	"eth-watcher/types"
+	ethCommon "github.com/ethereum/go-ethereum/common"
+)
 
 type config struct {
 	System struct {
 		Redis      string `yaml:"redis"`
 		Production bool   `yaml:"production"`
 	} `yaml:"system"`
-	Receiver []string            `yaml:"receiver"` // Watching address
 	Chain    []types.ChainConfig `yaml:"chain"`
 	Webhooks []string            `yaml:"webhooks"`
+
+	ReceiversCfg  []string         `yaml:"receiver"` // Watching address config
+	ReceiversHash []ethCommon.Hash `yaml:"-"`        // For ERC20 filters
 }
 
 var Config config
