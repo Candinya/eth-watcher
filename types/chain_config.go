@@ -10,6 +10,7 @@ type ChainConfig struct {
 	RPC           string        `yaml:"rpc"`
 	Interval      time.Duration `yaml:"interval"`
 	IncludeNative bool          `yaml:"includeNative"`
+	IncludeERC20  bool          `json:"includeERC20"`
 
 	ContractWhitelistCfg     []string            `yaml:"contractWhitelist"` // From config
 	ContractWhitelistAddress []ethCommon.Address `yaml:"-"`                 // Parsed

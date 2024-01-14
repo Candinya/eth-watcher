@@ -49,18 +49,26 @@ func routineQuery(chain *types.ChainConfig, client *ethclient.Client) {
 		if err != nil {
 			global.Logger.Errorf("Failed to filter native transfer logs with error: %v", err)
 		}
-		for _, log := range nativeLogs {
-			utils.FilterCallback(chain, true, client, log)
+		if len(nativeLogs) > 0 {
+			global.Logger.Debugf("Native transfer log found!")
+			for _, log := range nativeLogs {
+				utils.FilterCallback(chain, true, client, log)
+			}
 		}
 	}
 
 	// Filter ERC20 transfer events
-	erc20Logs, err := filterERC20Transfer(client, lastHeight, currentHeight-1, chain.ContractWhitelistAddress)
-	if err != nil {
-		global.Logger.Errorf("Failed to filter ERC20 transfer logs with error: %v", err)
-	}
-	for _, log := range erc20Logs {
-		utils.FilterCallback(chain, false, client, log)
+	if chain.IncludeERC20 {
+		erc20Logs, err := filterERC20Transfer(client, lastHeight, currentHeight-1, chain.ContractWhitelistAddress)
+		if err != nil {
+			global.Logger.Errorf("Failed to filter ERC20 transfer logs with error: %v", err)
+		}
+		if len(erc20Logs) > 0 {
+			global.Logger.Debugf("ERC20 transfer log found!")
+			for _, log := range erc20Logs {
+				utils.FilterCallback(chain, false, client, log)
+			}
+		}
 	}
 
 	global.Logger.Debugf("Routine finished for chain #%d", chain.ID)

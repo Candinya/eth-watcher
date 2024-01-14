@@ -7,7 +7,8 @@ chain: # Watching chain. You can add multiple EVM compatible chains.
   - id: 11155111 # Chain's ID, see https://chainlist.org .
     rpc: "https://rpc.sepolia.org" # JSON RPC endpoint of target chain.
     interval: 10s # Query interval, this should be a little larger than the common block interval of this chain.
-    includeNative: true # Watch native token transfer events. You can disable this if you only want to watch ERC20 token transfer events.
+    includeNative: true # Watch native token transfer events.
+    includeERC20: true # Watch ERC20 token transfer events.
     contractWhitelist: # Specify watching ERC20 contract whitelist. Leave empty to watch every ERC20 token transaction.
       - "0xcb7729f2b44ae7b86d58bb8068f0ead8fcf9378c"
 webhooks: # Target webhook URL, you can add multiple webhooks here.
