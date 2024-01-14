@@ -25,12 +25,13 @@ Native token transfer events:
 
 ```json
 {
+  "ts": "2024-01-14T21:36:12+08:00",
   "chain_id": 11155111,
   "sender": "0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA",
   "receiver": "0x9C8a0A9B5d5b178D73e775a2dC4D52711758C388",
   "is_native": true,
-  "amount": 0.001,
-  "tx": "0x6e6b56e796d8658b98e31deecf59d8175ef5ea1d3cbbec94af8f07d4eb316b9a"
+  "amount": 0.0001,
+  "tx": "0xfbf2b6d0b8ad824e5abc7db2a9852a0f63fadafd13fd31147b82c5dcec2aa48d"
 }
 ```
 
@@ -38,6 +39,7 @@ ERC20 token transfer events:
 
 ```json
 {
+  "ts": "2024-01-14T21:51:00+08:00",
   "chain_id": 11155111,
   "sender": "0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA",
   "receiver": "0x9C8a0A9B5d5b178D73e775a2dC4D52711758C388",
@@ -48,8 +50,8 @@ ERC20 token transfer events:
     "symbol": "TEC",
     "decimals": 18
   },
-  "amount": 20,
-  "tx": "0x46ee7067ae37f460bec4c52885aef07c0709c5d6e2af299e96e351612325976e"
+  "amount": 1,
+  "tx": "0xcff756b6dd2e58ffed5860c1872f50c1e630d59cce0a4a430332277089fd4184"
 }
 ```
 
@@ -72,16 +74,19 @@ receiver:
 chain:
   - id: 1 # Mainnet
     rpc: "https://ethereum.publicnode.com"
-    interval: 30
+    interval: 30s
     includeNative: true
+    includeERC20: true
   - id: 137 # Polygon
     rpc: "https://polygon.llamarpc.com"
-    interval: 10
+    interval: 10s
     includeNative: true
+    includeERC20: true
   - id: 56 # BSC
     rpc: "https://bscrpc.com"
-    interval: 10
+    interval: 10s
     includeNative: true
+    includeERC20: true
 webhooks:
   - "<REDACTED>"
 ```
