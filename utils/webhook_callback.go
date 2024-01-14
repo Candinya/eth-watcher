@@ -14,18 +14,33 @@ func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, i
 	global.Logger.Debugf("Sending response to webhooks...")
 
 	// Prepare request body
-	body := types.WebhookCallbackBody{
-		TimeStamp: ts,
-		ChainID:   chain.ID,
-		Sender:    sender,
-		Receiver:  receiver,
-		IsNative:  isNative,
-		Contract: &types.ContractAddressWithMeta{
-			Address:      contractAddress,
-			ContractMeta: *contractMeta,
-		},
-		Amount:      amount,
-		Transaction: tx,
+	var body types.WebhookCallbackBody
+	if isNative {
+		// No contract
+		body = types.WebhookCallbackBody{
+			TimeStamp:   ts,
+			ChainID:     chain.ID,
+			Sender:      sender,
+			Receiver:    receiver,
+			IsNative:    isNative,
+			Amount:      amount,
+			Transaction: tx,
+		}
+	} else {
+		// With contract
+		body = types.WebhookCallbackBody{
+			TimeStamp: ts,
+			ChainID:   chain.ID,
+			Sender:    sender,
+			Receiver:  receiver,
+			IsNative:  isNative,
+			Contract: &types.ContractAddressWithMeta{
+				Address:      contractAddress,
+				ContractMeta: *contractMeta,
+			},
+			Amount:      amount,
+			Transaction: tx,
+		}
 	}
 
 	bodyBytes, err := json.Marshal(&body)
