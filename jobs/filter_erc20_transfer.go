@@ -15,6 +15,13 @@ import (
 
 func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uint64, contractWhitelist []ethCommon.Address) (filteredLogs []types.FilterParsedLog, err error) {
 
+	if fromBlock > toBlock {
+		// Just nothing
+		return nil, nil
+	}
+
+	global.Logger.Debugf("Query ERC20 transfer events for blocks ( %d - %d ) ...", fromBlock, toBlock)
+
 	query := ethereum.FilterQuery{
 		FromBlock: big.NewInt(int64(fromBlock)),
 		ToBlock:   big.NewInt(int64(toBlock)),
@@ -28,7 +35,7 @@ func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uin
 
 	logs, err := client.FilterLogs(context.Background(), query)
 	if err != nil {
-		global.Logger.Errorf("Failed to filter log for block ( %d - %d ) with error: %v", fromBlock, toBlock, err)
+		global.Logger.Errorf("Failed to query log for blocks ( %d - %d ) with error: %v", fromBlock, toBlock, err)
 		return nil, err
 	}
 
