@@ -73,18 +73,18 @@ receiver:
   - "0x9C8a0A9B5d5b178D73e775a2dC4D52711758C388"
 chain:
   - id: 1 # Mainnet
-    rpc: "https://ethereum.publicnode.com"
-    interval: 30s
+    rpc: "https://cloudflare-eth.com"
+    interval: 1m
     includeNative: true
     includeERC20: true
   - id: 137 # Polygon
-    rpc: "https://polygon.llamarpc.com"
-    interval: 10s
+    rpc: "https://polygon-rpc.com"
+    interval: 1m
     includeNative: true
     includeERC20: true
   - id: 56 # BSC
     rpc: "https://bscrpc.com"
-    interval: 10s
+    interval: 1m
     includeNative: true
     includeERC20: true
 webhooks:
