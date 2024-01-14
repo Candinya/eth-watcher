@@ -32,7 +32,7 @@ func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uin
 		return nil, err
 	}
 
-	var blockTs map[uint64]time.Time
+	blockTs := make(map[uint64]time.Time)
 
 	// Get logs (refer to ERC20 Token Transfer Topic definitions)
 	zeroHash := ethCommon.BigToHash(big.NewInt(0))
