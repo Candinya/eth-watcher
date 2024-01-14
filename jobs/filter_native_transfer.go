@@ -21,6 +21,7 @@ func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock ui
 
 	// Inspect every block
 	for blockNo := fromBlock; blockNo <= toBlock; blockNo++ {
+		global.Logger.Debugf("Inspecting block #%d ...", blockNo)
 		block, err := client.BlockByNumber(context.Background(), big.NewInt(int64(blockNo)))
 		if err != nil {
 			global.Logger.Errorf("Failed to inspect block #%d with error: %v", blockNo, err)
