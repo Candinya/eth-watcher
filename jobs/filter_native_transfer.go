@@ -28,12 +28,8 @@ func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock ui
 		}
 		// Check every transaction
 		for _, tx := range block.Transactions() {
-			if tx.To() == nil {
-				// Is contract creation, skip
-				continue
-			}
-			if len(tx.Data()) > 0 || tx.Value().Cmp(big.NewInt(0)) == 0 {
-				// Nothing transferred
+			if tx.To() == nil || // Is contract creation
+				tx.Value().Cmp(big.NewInt(0)) == 0 { // Nothing transferred
 				continue
 			}
 			// Check if transaction recipient is in receivers
