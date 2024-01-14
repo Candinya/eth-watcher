@@ -1,5 +1,7 @@
 package consts
 
-const (
-	ERC20_TRANSFER_TOPIC_0_HEX = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+import "github.com/ethereum/go-ethereum/crypto"
+
+var (
+	ERC20_TRANSFER_TOPIC_0 = crypto.Keccak256Hash([]byte("Transfer(address,address,uint256)"))
 )

@@ -3,15 +3,11 @@ package consts
 import (
 	"bytes"
 	ethCommon "github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
 	"testing"
 )
 
 func TestERC20TransferTopic(t *testing.T) {
-	transferEventStructure := []byte("Transfer(address,address,uint256)")
-	transferEventSigHash := crypto.Keccak256Hash(transferEventStructure)
-
-	if bytes.Equal(transferEventSigHash.Bytes(), ethCommon.HexToHash(ERC20_TRANSFER_TOPIC_0_HEX).Bytes()) {
+	if bytes.Equal(ERC20_TRANSFER_TOPIC_0.Bytes(), ethCommon.HexToHash("0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef").Bytes()) {
 		t.Logf("Signature matches")
 	} else {
 		t.Fatalf("Signature Mismatch")

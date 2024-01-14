@@ -12,14 +12,6 @@ import (
 	"math/big"
 )
 
-var (
-	erc20TransferTopic0Hash ethCommon.Hash
-)
-
-func init() {
-	erc20TransferTopic0Hash = ethCommon.HexToHash(consts.ERC20_TRANSFER_TOPIC_0_HEX)
-}
-
 func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uint64, contractWhitelist []ethCommon.Address) (filteredLogs []types.FilterParsedLog, err error) {
 
 	query := ethereum.FilterQuery{
@@ -27,7 +19,7 @@ func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uin
 		ToBlock:   big.NewInt(int64(toBlock)),
 		Addresses: contractWhitelist,
 		Topics: [][]ethCommon.Hash{
-			{erc20TransferTopic0Hash},
+			{consts.ERC20_TRANSFER_TOPIC_0},
 			{},                          // From any
 			config.Config.ReceiversHash, // To receivers
 		},
