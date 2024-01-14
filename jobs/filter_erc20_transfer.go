@@ -52,11 +52,12 @@ func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uin
 				}
 			}
 			filteredLogs = append(filteredLogs, types.FilterParsedLog{
-				Sender:   ethCommon.BytesToAddress(log.Topics[1].Bytes()),
-				Receiver: ethCommon.BytesToAddress(log.Topics[2].Bytes()),
-				Amount:   new(big.Int).SetBytes(log.Data),
-				Contract: &log.Address,
-				TxHash:   log.TxHash,
+				Sender:    ethCommon.BytesToAddress(log.Topics[1].Bytes()),
+				Receiver:  ethCommon.BytesToAddress(log.Topics[2].Bytes()),
+				Amount:    new(big.Int).SetBytes(log.Data),
+				Contract:  &log.Address,
+				TxHash:    log.TxHash,
+				TimeStamp: ts,
 			})
 		}
 	}
