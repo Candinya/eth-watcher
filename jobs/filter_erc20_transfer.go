@@ -10,6 +10,7 @@ import (
 	ethCommon "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
+	"time"
 )
 
 func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uint64, contractWhitelist []ethCommon.Address) (filteredLogs []types.FilterParsedLog, err error) {
@@ -31,10 +32,25 @@ func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uin
 		return nil, err
 	}
 
+	var blockTs map[uint64]time.Time
+
 	// Get logs (refer to ERC20 Token Transfer Topic definitions)
+	zeroHash := ethCommon.BigToHash(big.NewInt(0))
 	for _, log := range logs {
-		if big.NewInt(0).Cmp(log.Topics[1].Big()) != 0 {
-			// Not mint (mint is from null address)
+		if log.Topics[1].Cmp(zeroHash) != 0 {
+			// Not mint (mint is from null (genesis) address)
+			// Set timestamp
+			ts, ok := blockTs[log.BlockNumber]
+			if !ok {
+				bInfo, err := client.BlockByNumber(context.Background(), big.NewInt(int64(log.BlockNumber)))
+				if err != nil {
+					global.Logger.Errorf("Failed to get info for block %d with error: %v", log.BlockNumber, err)
+					ts = time.Unix(0, 0)
+				} else {
+					ts = time.Unix(int64(bInfo.Time()), 0)
+					blockTs[log.BlockNumber] = ts
+				}
+			}
 			filteredLogs = append(filteredLogs, types.FilterParsedLog{
 				Sender:   ethCommon.BytesToAddress(log.Topics[1].Bytes()),
 				Receiver: ethCommon.BytesToAddress(log.Topics[2].Bytes()),

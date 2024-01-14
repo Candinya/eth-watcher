@@ -1,11 +1,14 @@
 package types
 
+import "time"
+
 type ContractAddressWithMeta struct {
 	Address string `json:"address"`
 	ContractMeta
 }
 
 type WebhookCallbackBody struct {
+	TimeStamp   time.Time                `json:"ts"`
 	ChainID     int64                    `json:"chain_id"`
 	Sender      string                   `json:"sender"`
 	Receiver    string                   `json:"receiver"`

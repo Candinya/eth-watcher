@@ -7,17 +7,19 @@ import (
 	"eth-watcher/global"
 	"eth-watcher/types"
 	"net/http"
+	"time"
 )
 
-func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, isNative bool, contractAddress string, contractMeta *types.ContractMeta, amount float64, tx string) {
+func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, isNative bool, contractAddress string, contractMeta *types.ContractMeta, amount float64, tx string, ts time.Time) {
 	global.Logger.Debugf("Sending response to webhooks...")
 
 	// Prepare request body
 	body := types.WebhookCallbackBody{
-		ChainID:  chain.ID,
-		Sender:   sender,
-		Receiver: receiver,
-		IsNative: isNative,
+		TimeStamp: ts,
+		ChainID:   chain.ID,
+		Sender:    sender,
+		Receiver:  receiver,
+		IsNative:  isNative,
 		Contract: &types.ContractAddressWithMeta{
 			Address:      contractAddress,
 			ContractMeta: *contractMeta,

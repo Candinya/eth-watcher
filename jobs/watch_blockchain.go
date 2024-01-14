@@ -15,7 +15,7 @@ func WatchBlockChain(chain *types.ChainConfig) error {
 	}
 	global.Logger.Infof("Start watching chain #%d...", chain.ID)
 	go func() {
-		ticker := time.NewTicker(time.Duration(chain.Interval) * time.Second)
+		ticker := time.NewTicker(chain.Interval)
 		for {
 			<-ticker.C
 			go routineQuery(chain, client)

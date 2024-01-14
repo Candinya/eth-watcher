@@ -1,14 +1,15 @@
 package jobs
 
 import (
-	"bytes"
 	"context"
 	"eth-watcher/config"
 	"eth-watcher/global"
 	"eth-watcher/types"
+	"github.com/ethereum/go-ethereum/common"
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
+	"time"
 )
 
 func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock uint64) (filteredLogs []types.FilterParsedLog, err error) {
@@ -36,8 +37,9 @@ func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock ui
 				continue
 			}
 			// Check if transaction recipient is in receivers
+			toAddressHash := common.BytesToHash(tx.To().Bytes())
 			for _, receiver := range config.Config.ReceiversHash {
-				if bytes.Equal(tx.To().Hash().Bytes(), receiver.Bytes()) {
+				if receiver.Cmp(toAddressHash) == 0 {
 					// Found
 					sender, err := ethTypes.Sender(ethTypes.LatestSignerForChainID(tx.ChainId()), tx)
 					if err != nil {
@@ -46,11 +48,12 @@ func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock ui
 					}
 
 					filteredLogs = append(filteredLogs, types.FilterParsedLog{
-						Sender:   sender,
-						Receiver: *tx.To(),
-						Amount:   tx.Value(),
-						Contract: nil,
-						TxHash:   tx.Hash(),
+						Sender:    sender,
+						Receiver:  *tx.To(),
+						Amount:    tx.Value(),
+						Contract:  nil,
+						TxHash:    tx.Hash(),
+						TimeStamp: time.Unix(int64(block.Time()), 0),
 					})
 
 					break

@@ -18,5 +18,5 @@ func FilterCallback(chain *types.ChainConfig, isNative bool, client *ethclient.C
 	amountParsed := ParseAmount(parsedLog.Amount, contractMeta)
 
 	// Call webhook
-	WebhookCallback(chain, parsedLog.Sender.Hex(), parsedLog.Receiver.Hex(), isNative, parsedLog.Contract.Hex(), contractMeta, amountParsed, parsedLog.TxHash.Hex())
+	WebhookCallback(chain, parsedLog.Sender.Hex(), parsedLog.Receiver.Hex(), isNative, parsedLog.Contract.Hex(), contractMeta, amountParsed, parsedLog.TxHash.Hex(), parsedLog.TimeStamp)
 }
