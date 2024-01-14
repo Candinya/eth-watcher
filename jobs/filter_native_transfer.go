@@ -14,7 +14,7 @@ import (
 
 func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock uint64) (filteredLogs []types.FilterParsedLog, err error) {
 
-	if fromBlock < toBlock {
+	if fromBlock > toBlock {
 		// Just nothing
 		return nil, nil
 	}
