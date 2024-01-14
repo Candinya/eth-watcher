@@ -17,10 +17,8 @@ func WatchBlockChain(chain *types.ChainConfig) error {
 	go func() {
 		ticker := time.NewTicker(time.Duration(chain.Interval) * time.Second)
 		for {
-			select {
-			case <-ticker.C:
-				go routineQuery(chain, client)
-			}
+			<-ticker.C
+			go routineQuery(chain, client)
 		}
 	}()
 
