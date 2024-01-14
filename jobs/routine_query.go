@@ -2,6 +2,7 @@ package jobs
 
 import (
 	"context"
+	"errors"
 	"eth-watcher/consts"
 	"eth-watcher/global"
 	"eth-watcher/types"
@@ -26,7 +27,11 @@ func routineQuery(chain *types.ChainConfig, client *ethclient.Client) {
 		Get: true, // Update key and return old value in one atomic operation
 	}).Result()
 	if err != nil {
-		global.Logger.Errorf("Failed to get last block height from cache with error: %v", err)
+		if errors.Is(err, redis.Nil) {
+			global.Logger.Warnf("No last run block height found, staring from now.")
+		} else {
+			global.Logger.Errorf("Failed to get last block height from cache with error: %v", err)
+		}
 		return
 	}
 
