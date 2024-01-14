@@ -11,6 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/redis/go-redis/v9"
 	"strconv"
+	"sync"
 )
 
 func routineQuery(chain *types.ChainConfig, client *ethclient.Client) {
@@ -48,33 +49,45 @@ func routineQuery(chain *types.ChainConfig, client *ethclient.Client) {
 		return
 	}
 
+	var workWg sync.WaitGroup
+
 	// Filter native transfer events
 	if chain.IncludeNative {
-		nativeLogs, err := filterNativeTransfer(client, lastHeight, currentHeight-1)
-		if err != nil {
-			global.Logger.Errorf("Failed to filter native transfer logs with error: %v", err)
-		}
-		if len(nativeLogs) > 0 {
-			global.Logger.Debugf("Native transfer log found!")
-			for _, log := range nativeLogs {
-				utils.FilterCallback(chain, true, client, log)
+		workWg.Add(1)
+		go func() {
+			defer workWg.Done()
+			nativeLogs, err := filterNativeTransfer(client, lastHeight, currentHeight-1)
+			if err != nil {
+				global.Logger.Errorf("Failed to filter native transfer logs with error: %v", err)
 			}
-		}
+			if len(nativeLogs) > 0 {
+				global.Logger.Debugf("Native transfer log found!")
+				for _, log := range nativeLogs {
+					utils.FilterCallback(chain, true, client, log)
+				}
+			}
+		}()
 	}
 
 	// Filter ERC20 transfer events
 	if chain.IncludeERC20 {
-		erc20Logs, err := filterERC20Transfer(client, lastHeight, currentHeight-1, chain.ContractWhitelistAddress)
-		if err != nil {
-			global.Logger.Errorf("Failed to filter ERC20 transfer logs with error: %v", err)
-		}
-		if len(erc20Logs) > 0 {
-			global.Logger.Debugf("ERC20 transfer log found!")
-			for _, log := range erc20Logs {
-				utils.FilterCallback(chain, false, client, log)
+		workWg.Add(1)
+		go func() {
+			defer workWg.Done()
+			erc20Logs, err := filterERC20Transfer(client, lastHeight, currentHeight-1, chain.ContractWhitelistAddress)
+			if err != nil {
+				global.Logger.Errorf("Failed to filter ERC20 transfer logs with error: %v", err)
 			}
-		}
+			if len(erc20Logs) > 0 {
+				global.Logger.Debugf("ERC20 transfer log found!")
+				for _, log := range erc20Logs {
+					utils.FilterCallback(chain, false, client, log)
+				}
+			}
+		}()
 	}
+
+	workWg.Wait()
 
 	global.Logger.Debugf("Routine finished for chain #%d", chain.ID)
 }
