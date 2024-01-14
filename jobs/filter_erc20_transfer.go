@@ -42,12 +42,12 @@ func filterERC20Transfer(client *ethclient.Client, fromBlock uint64, toBlock uin
 			// Set timestamp
 			ts, ok := blockTs[log.BlockNumber]
 			if !ok {
-				bInfo, err := client.BlockByNumber(context.Background(), big.NewInt(int64(log.BlockNumber)))
+				bHeader, err := client.HeaderByNumber(context.Background(), big.NewInt(int64(log.BlockNumber)))
 				if err != nil {
 					global.Logger.Errorf("Failed to get info for block %d with error: %v", log.BlockNumber, err)
 					ts = time.Unix(0, 0)
 				} else {
-					ts = time.Unix(int64(bInfo.Time()), 0)
+					ts = time.Unix(int64(bHeader.Time), 0)
 					blockTs[log.BlockNumber] = ts
 				}
 			}
