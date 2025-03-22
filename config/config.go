@@ -13,8 +13,11 @@ type config struct {
 	Chain    []types.ChainConfig `yaml:"chain"`
 	Webhooks []string            `yaml:"webhooks"`
 
-	ReceiversCfg  []string         `yaml:"receiver"` // Watching address config
-	ReceiversHash []ethCommon.Hash `yaml:"-"`        // For ERC20 filters
+	SendersCfg     []string            `yaml:"sender"`
+	SendersAddress []ethCommon.Address `yaml:"-"`
+
+	ReceiversCfg     []string            `yaml:"receiver"` // Watching address config
+	ReceiversAddress []ethCommon.Address `yaml:"-"`        // For ERC20 filters
 }
 
 var Config config

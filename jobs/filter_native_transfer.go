@@ -5,12 +5,21 @@ import (
 	"eth-watcher/config"
 	"eth-watcher/global"
 	"eth-watcher/types"
-	"github.com/ethereum/go-ethereum/common"
+	ethCommon "github.com/ethereum/go-ethereum/common"
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
 	"time"
 )
+
+func isInAddressArray(target ethCommon.Address, arr []ethCommon.Address) bool {
+	for _, addr := range arr {
+		if addr.Cmp(target) == 0 {
+			return true
+		}
+	}
+	return false
+}
 
 func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock uint64) (filteredLogs []types.FilterParsedLog, err error) {
 
@@ -33,28 +42,35 @@ func filterNativeTransfer(client *ethclient.Client, fromBlock uint64, toBlock ui
 				tx.Value().Cmp(big.NewInt(0)) == 0 { // Nothing transferred
 				continue
 			}
-			// Check if transaction recipient is in receivers
-			toAddressHash := common.BytesToHash(tx.To().Bytes())
-			for _, receiver := range config.Config.ReceiversHash {
-				if receiver.Cmp(toAddressHash) == 0 {
-					// Found
-					sender, err := ethTypes.Sender(ethTypes.LatestSignerForChainID(tx.ChainId()), tx)
-					if err != nil {
-						global.Logger.Errorf("Failed to extract signer from transaction %s with error: %v", tx.Hash(), err)
-						break
-					}
+			// Check transaction's sender and receiver
 
-					filteredLogs = append(filteredLogs, types.FilterParsedLog{
-						Sender:    sender,
-						Receiver:  *tx.To(),
-						Amount:    tx.Value(),
-						Contract:  nil,
-						TxHash:    tx.Hash(),
-						TimeStamp: time.Unix(int64(block.Time()), 0),
-					})
+			signer, err := ethTypes.Sender(ethTypes.LatestSignerForChainID(tx.ChainId()), tx)
+			if err != nil {
+				global.Logger.Errorf("Failed to extract signer from transaction %s with error: %v", tx.Hash(), err)
+				break
+			}
 
-					break
-				}
+			receiver := *tx.To()
+
+			var ia *ethCommon.Address = nil
+			if isInAddressArray(signer, config.Config.SendersAddress) {
+				ia = &signer
+			} else if isInAddressArray(receiver, config.Config.ReceiversAddress) {
+				ia = &receiver
+			}
+
+			if ia != nil {
+				// Found
+				filteredLogs = append(filteredLogs, types.FilterParsedLog{
+					IAddress:    *ia,
+					BlockNumber: block.Number(),
+					Sender:      signer,
+					Receiver:    receiver,
+					Amount:      tx.Value(),
+					Contract:    nil,
+					TxHash:      tx.Hash(),
+					TimeStamp:   time.Unix(int64(block.Time()), 0),
+				})
 			}
 		}
 	}

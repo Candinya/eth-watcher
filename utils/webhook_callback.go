@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, isNative bool, contractAddress string, contractMeta *types.ContractMeta, amount float64, tx string, ts time.Time) {
+func WebhookCallback(chain *types.ChainConfig, ia string, sender string, receiver string, isNative bool, contractAddress *string, contractMeta *types.ContractMeta, amount float64, balance float64, tx string, ts time.Time) {
 	global.Logger.Debugf("Sending response to webhooks...")
 
 	// Prepare request body
@@ -20,10 +20,12 @@ func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, i
 		body = types.WebhookCallbackBody{
 			TimeStamp:   ts,
 			ChainID:     chain.ID,
+			IAddress:    ia,
 			Sender:      sender,
 			Receiver:    receiver,
 			IsNative:    isNative,
 			Amount:      amount,
+			Balance:     balance,
 			Transaction: tx,
 		}
 	} else {
@@ -31,14 +33,16 @@ func WebhookCallback(chain *types.ChainConfig, sender string, receiver string, i
 		body = types.WebhookCallbackBody{
 			TimeStamp: ts,
 			ChainID:   chain.ID,
+			IAddress:  ia,
 			Sender:    sender,
 			Receiver:  receiver,
 			IsNative:  isNative,
 			Contract: &types.ContractAddressWithMeta{
-				Address:      contractAddress,
+				Address:      *contractAddress,
 				ContractMeta: *contractMeta,
 			},
 			Amount:      amount,
+			Balance:     balance,
 			Transaction: tx,
 		}
 	}

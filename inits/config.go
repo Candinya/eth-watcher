@@ -34,12 +34,21 @@ func Config() error {
 		}
 	}
 
-	// Set receivers
-	for _, receiverAddressHex := range config.Config.ReceiversCfg {
-		config.Config.ReceiversHash = append(config.Config.ReceiversHash, ethCommon.HexToHash(receiverAddressHex))
+	// Set senders
+	for _, senderAddressHex := range config.Config.SendersCfg {
+		config.Config.SendersAddress = append(config.Config.SendersAddress, ethCommon.HexToAddress(senderAddressHex))
 	}
 
-	// Set chain whitelists
+	// Set receivers
+	for _, receiverAddressHex := range config.Config.ReceiversCfg {
+		config.Config.ReceiversAddress = append(config.Config.ReceiversAddress, ethCommon.HexToAddress(receiverAddressHex))
+	}
+
+	if len(config.Config.SendersAddress) == 0 && len(config.Config.ReceiversAddress) == 0 {
+		return fmt.Errorf("should have at least one sender or receiver")
+	}
+
+	// Set contract whitelists
 	for index := range config.Config.Chain {
 		for _, contractAddressHex := range config.Config.Chain[index].ContractWhitelistCfg {
 			config.Config.Chain[index].ContractWhitelistAddress = append(config.Config.Chain[index].ContractWhitelistAddress, ethCommon.HexToAddress(contractAddressHex))
