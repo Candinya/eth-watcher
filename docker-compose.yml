@@ -3,7 +3,7 @@ services:
   app:
     restart: always
     #build: .
-    image: ncr.pub/nyawork/dpay/eth-watcher:latest
+    image: ghcr.io/candinya/eth-watcher:latest
     networks:
       - internal_network
       - external_network
