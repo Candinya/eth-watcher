@@ -1,6 +1,8 @@
 system:
   redis: "redis://redis:6379/0" # Link to redis database. No need to change this when using provided docker compose file.
   production: true # Run in production mode.
+sender: # Sender address, you can add multiple ethereum addresses.
+  - "0xD3E8ce4841ed658Ec8dcb99B7a74beFC377253EA"
 receiver: # Receiver address, you can add multiple ethereum addresses.
   - "0x332De1aFBCf704E4005A803158c1d58696005BC2"
 chain: # Watching chain. You can add multiple EVM compatible chains.
