@@ -63,7 +63,7 @@ ERC20 token transfer events:
 
 ## Config Demo
 
-The config powering [NyaOne Sponsor Bot](https://nya.one/@sponsor) looks like below:
+The config used to power [NyaOne Sponsor Bot](https://nya.one/@sponsor) looks like below:
 
 ```yaml
 system:
